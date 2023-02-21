@@ -1,0 +1,11 @@
+.button:hover .button-label {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.button-label {
+    transition: all 0.4s ease-in-out;
+    width: 4rem;
+    max-height: 0;
+    opacity: 0;
+}
