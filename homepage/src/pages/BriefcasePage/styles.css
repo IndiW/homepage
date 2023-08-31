@@ -1,0 +1,10 @@
+.gif-container {
+    position: relative;
+    padding-bottom: calc(55% + 44px);
+}
+
+.gif-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

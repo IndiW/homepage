@@ -1,0 +1,32 @@
+.overlay-container {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+}
+
+.overlay {
+    position: absolute;
+    background-color: black;
+    opacity: 60%;
+    z-index: 99;
+    height: 100vh;
+    width: 100vw;
+}
+
+.buttons-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+}
+
+.close-button {
+    position: absolute;
+    color: white;
+    z-index: 90;
+    top: 4%;
+    right: 4%;
+}
