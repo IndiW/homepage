@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { HeartIcon, LocationIcon } from '../../components/Icons'
 
 export function ProfileIcon() {
@@ -127,7 +127,15 @@ export default function BaseLandingPage() {
             <div className='absolute' style={{ top: '60px', left: '8px' }}>
                 <ProfileIcon />
             </div>
-            <div className='bg-black' style={{ height: '10vh' }}></div>
+            <div
+                style={{
+                    height: '10vh',
+                    backgroundImage: "url('nikolaos-anastasopoulos-mrsv-Z35oMA-unsplash.jpg')",
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
+                }}
+            ></div>
+            {/* <img src={CoverPhoto} alt="CoverPhoto" style={{height: '10vh'}} /> */}
             <div className='flex h-3/5 flex-col  gap-y-5 px-2'>
                 <div className='pt-10'>
                     <h1 className='text-xl font-bold'>{profileName}</h1>
