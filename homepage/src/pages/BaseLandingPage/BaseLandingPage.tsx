@@ -19,6 +19,18 @@ export default function BaseLandingPage() {
                     <h1 className='text-xl font-bold'>Indika Wijesundera</h1>
                     <h1 className='text-base text-slate-500'>@SoftwareEngineer</h1>
                     <h1 className='text-base'>React, Nodejs, CDK</h1>
+                    <h1 className='text-base text-slate-500'>Toronto, CA</h1>
+                    <h1 className='text-base text-slate-500'>
+                        <span className='font-bold text-black'>500</span> Trying to recruit
+                    </h1>
+                </div>
+                <div>
+                    <button>Posts</button>
+                    <button>Projects</button>
+                    <button>Blogs</button>
+                </div>
+                <div>
+                    <div>CONTENT</div>
                 </div>
             </div>
         </div>
