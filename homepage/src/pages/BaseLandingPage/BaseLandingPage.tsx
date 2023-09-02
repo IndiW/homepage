@@ -9,7 +9,7 @@ export default function BaseLandingPage() {
                     backgroundColor: '#bbb',
                     borderRadius: '50%',
                     display: 'inline-block',
-                    top: '30%',
+                    top: '18%',
                     left: '5%',
                 }}
             ></div>
