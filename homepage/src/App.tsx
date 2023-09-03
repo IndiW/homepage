@@ -2,8 +2,10 @@ import { useState } from 'react'
 import BaseLandingPage from './pages/BaseLandingPage/BaseLandingPage'
 export default function App() {
     return (
-        <div className='h-screen w-full'>
-            <BaseLandingPage />
+        <div className='flex h-screen w-full justify-center'>
+            <div className='border-x-1 border-slate-500 md:w-1/2'>
+                <BaseLandingPage />
+            </div>
         </div>
     )
 }

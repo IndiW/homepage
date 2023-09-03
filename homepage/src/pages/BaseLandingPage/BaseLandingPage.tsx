@@ -161,7 +161,7 @@ export default function BaseLandingPage() {
                             )
                         })}
                     </div>
-                    <hr className='w-screen' />
+                    <hr className='w-full' />
                 </div>
                 <div className='flex flex-col gap-4'>
                     {posts.map((data) => {
@@ -174,7 +174,7 @@ export default function BaseLandingPage() {
                                     profileHandle={profileHandle}
                                     metadata={data.metadata}
                                 />
-                                <hr className='w-screen' />
+                                <hr className='w-full' />
                             </>
                         )
                     })}
