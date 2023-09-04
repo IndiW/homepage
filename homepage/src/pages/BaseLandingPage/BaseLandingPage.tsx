@@ -10,6 +10,10 @@ export function ProfileIcon() {
                 backgroundColor: '#bbb',
                 borderRadius: '50%',
                 display: 'inline-block',
+                backgroundImage: "url('vibe.gif')",
+                backgroundSize: 'contain',
+                borderColor: 'white',
+                borderWidth: '2px',
             }}
         >
             {' '}
