@@ -21,6 +21,50 @@ export function ProfileIcon() {
     )
 }
 
+type IconButtonProps = {
+    value: number
+}
+export function IconButton(props: IconButtonProps) {
+    const { value } = props
+    const [hover, setHover] = useState(false)
+    const [clicked, setClicked] = useState(false)
+
+    const handleClick = () => {
+        setClicked(!clicked)
+    }
+
+    return (
+        <button
+            className={hover || clicked ? 'text-rose-700' : 'text-slate-500'}
+            onMouseEnter={(e) => {
+                setHover(true)
+            }}
+            onMouseLeave={(e) => {
+                setHover(false)
+            }}
+            onClick={handleClick}
+        >
+            <div className='flex flex-row items-center gap-2'>
+                <div
+                    className={`flex h-5 w-5 content-center items-center justify-center rounded-full pl-px ${
+                        hover ? ' bg-rose-700 bg-opacity-20' : ''
+                    }
+                    `}
+                >
+                    <HeartIcon
+                        w={'15px'}
+                        h={'15px'}
+                        color={hover || clicked ? '#be123c' : '#64748b'}
+                        fill={clicked ? '#be123c' : 'none'}
+                    />
+                </div>
+
+                <p className='text-sm'>{value}</p>
+            </div>
+        </button>
+    )
+}
+
 type PostMetadata = {
     likes: number
     shares: number
@@ -48,10 +92,7 @@ export function Post(props: PostProps) {
                         </h2>
                     </span>
                     <p>{content}</p>
-                    <div className='flex flex-row items-center gap-2'>
-                        <HeartIcon w={'15px'} h={'15px'} color={'#64748b'} />
-                        <p className='text-sm text-slate-500'>{metadata.likes}</p>
-                    </div>
+                    <IconButton value={metadata.likes} />
                 </div>
             </div>
         </div>
@@ -134,7 +175,7 @@ export default function BaseLandingPage() {
             <div
                 style={{
                     height: '10vh',
-                    backgroundImage: "url('nikolaos-anastasopoulos-mrsv-Z35oMA-unsplash.jpg')",
+                    backgroundImage: "url('coverphoto.jpg')",
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
                 }}
@@ -154,7 +195,7 @@ export default function BaseLandingPage() {
                     </h1>
                 </div>
                 <div>
-                    <div className='row-auto flex w-screen gap-8'>
+                    <div className='row-auto flex  gap-8'>
                         {tabLabels.map((label) => {
                             return (
                                 <TabButton

@@ -1,14 +1,14 @@
 import { IconProps } from './types'
 
 export function HeartIcon(props: IconProps) {
-    const { w, h, color } = props
+    const { w, h, color, onHover, fill } = props
     return (
         <>
             <svg
                 width={w}
                 height={h}
                 viewBox='0 0 24 24'
-                fill='none'
+                fill={fill ?? 'none'}
                 xmlns='http://www.w3.org/2000/svg'
             >
                 <path
