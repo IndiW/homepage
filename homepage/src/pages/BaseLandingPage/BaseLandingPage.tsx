@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { HeartIcon, LocationIcon } from '../../components/Icons'
 
-export function ProfileIcon() {
+type ProfileIconProps = {
+    large?: boolean
+}
+export function ProfileIcon(props: ProfileIconProps) {
+    const { large } = props
     return (
         <div
             style={{
-                height: 50,
-                width: 50,
+                height: large ? 80 : 50,
+                width: large ? 80 : 50,
                 backgroundColor: '#bbb',
                 borderRadius: '50%',
                 display: 'inline-block',
@@ -22,14 +26,20 @@ export function ProfileIcon() {
 }
 
 type IconButtonProps = {
+    updateValue: (newValue: number) => void
     value: number
 }
 export function IconButton(props: IconButtonProps) {
-    const { value } = props
+    const { value, updateValue } = props
     const [hover, setHover] = useState(false)
     const [clicked, setClicked] = useState(false)
 
     const handleClick = () => {
+        if (!clicked) {
+            updateValue(value + 1)
+        } else {
+            updateValue(value - 1)
+        }
         setClicked(!clicked)
     }
 
@@ -46,7 +56,7 @@ export function IconButton(props: IconButtonProps) {
         >
             <div className='flex flex-row items-center gap-2'>
                 <div
-                    className={`flex h-5 w-5 content-center items-center justify-center rounded-full pl-px ${
+                    className={`flex h-5 w-5 content-center items-center justify-center rounded-full ${
                         hover ? ' bg-rose-700 bg-opacity-20' : ''
                     }
                     `}
@@ -71,13 +81,20 @@ type PostMetadata = {
 }
 type PostProps = {
     date: string
-    content: string // extend to content component
+    content: string | JSX.Element
     profileName: string
     profileHandle: string
     metadata: PostMetadata
 }
 export function Post(props: PostProps) {
     const { date, content, profileName, profileHandle, metadata } = props
+    const [likes, updateLikes] = useState(metadata.likes)
+    const handleUpdateLike = (newValue: number) => {
+        updateLikes(newValue)
+    }
+
+    const postContent = typeof content === 'string' ? <p>{content}</p> : content
+
     return (
         <div className='flex'>
             <div className='h-14 w-14 flex-none'>
@@ -91,8 +108,8 @@ export function Post(props: PostProps) {
                             {profileHandle} · {date}
                         </h2>
                     </span>
-                    <p>{content}</p>
-                    <IconButton value={metadata.likes} />
+                    {postContent}
+                    <IconButton value={likes} updateValue={handleUpdateLike} />
                 </div>
             </div>
         </div>
@@ -130,15 +147,47 @@ type PostData = {
     type: PostType
     date: string
     metadata: PostMetadata
-    content: string
+    content: string | JSX.Element
+}
+
+export function CssPost() {
+    return (
+        <div
+            style={{
+                width: '200px',
+                aspectRatio: '3/2',
+                background: 'linear-gradient()',
+            }}
+        >
+            I CAN ADD CSS
+        </div>
+    )
 }
 
 const postsData: Array<PostData> = [
     {
+        type: 'project',
+        date: 'Sept 5, 2023',
+        metadata: {
+            likes: 9243,
+            shares: 20,
+        },
+        content: CssPost(),
+    },
+    {
+        type: 'text',
+        date: 'Sept 5, 2023',
+        metadata: {
+            likes: 9243,
+            shares: 20,
+        },
+        content: 'no affiliation to ❌ btw',
+    },
+    {
         type: 'text',
         date: 'Sept 2, 2023',
         metadata: {
-            likes: 20,
+            likes: Math.round((Date.now() * 2) / 1000000),
             shares: 20,
         },
         content: 'First post',
@@ -166,15 +215,17 @@ export default function BaseLandingPage() {
     }
     const profileName = 'Indika Wijesundera'
     const profileHandle = '@SoftwareEngineer'
+    const profileDescription =
+        'Full stack developer with experience in typescript, python, react and aws'
 
     return (
         <div className='relative'>
-            <div className='absolute' style={{ top: '60px', left: '8px' }}>
-                <ProfileIcon />
+            <div className='absolute' style={{ top: '15vh', left: '8px' }}>
+                <ProfileIcon large={true} />
             </div>
             <div
                 style={{
-                    height: '10vh',
+                    height: '20vh',
                     backgroundImage: "url('coverphoto.jpg')",
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
@@ -185,7 +236,7 @@ export default function BaseLandingPage() {
                 <div className='pt-10'>
                     <h1 className='text-xl font-bold'>{profileName}</h1>
                     <h1 className='text-base text-slate-500'>{profileHandle}</h1>
-                    <h1 className='text-base'>React, Nodejs, CDK</h1>
+                    <h1 className='text-base'>{profileDescription}</h1>
                     <div className='flex items-center'>
                         <LocationIcon w={'18x'} h={'18px'} color={'#64748b'} />
                         <h1 className='text-base text-slate-500'>Toronto, CA</h1>
@@ -199,6 +250,7 @@ export default function BaseLandingPage() {
                         {tabLabels.map((label) => {
                             return (
                                 <TabButton
+                                    key={label}
                                     isActive={label === currentTab}
                                     label={label}
                                     handleClick={handleTabClick(label)}
@@ -209,10 +261,11 @@ export default function BaseLandingPage() {
                     <hr className='w-full' />
                 </div>
                 <div className='flex flex-col gap-4'>
-                    {posts.map((data) => {
+                    {posts.map((data, index) => {
                         return (
                             <>
                                 <Post
+                                    key={data.type + `${index}`}
                                     date={data.date}
                                     content={data.content}
                                     profileName={profileName}
