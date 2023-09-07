@@ -169,7 +169,7 @@ const postsData: Array<PostData> = [
         type: 'project',
         date: 'Sept 5, 2023',
         metadata: {
-            likes: 9243,
+            likes: 12243,
             shares: 20,
         },
         content: CssPost(),
