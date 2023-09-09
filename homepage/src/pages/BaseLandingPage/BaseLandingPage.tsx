@@ -184,11 +184,10 @@ export function CssPost() {
                         position: 'absolute',
                         left: 0,
                         top: 0,
-                        // width: '100%',
+                        width: '100%',
                         height: '100%',
                         backgroundSize: '100%',
                         backgroundImage: "url('coverphoto.jpg')",
-                        width: '50px',
                     }}
                 ></div>
             </div>
