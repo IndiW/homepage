@@ -96,7 +96,7 @@ export function Post(props: PostProps) {
     const postContent = typeof content === 'string' ? <p>{content}</p> : content
 
     return (
-        <div className='flex'>
+        <div className='flex dark:text-white'>
             <div className='h-14 w-14 flex-none'>
                 <ProfileIcon />
             </div>
@@ -129,12 +129,12 @@ export function TabButton(props: TabButtonProps) {
             <button
                 onClick={handleClick}
                 className={`px-2 py-1 hover:bg-slate-100 ${
-                    isActive ? 'text-black' : 'text-slate-500'
+                    isActive ? 'text-black dark:text-white' : 'text-slate-500'
                 }`}
             >
                 {label}
             </button>
-            <hr className={`${isActive ? 'h-1 bg-black' : 'invisible'}`} />
+            <hr className={`${isActive ? 'h-1 bg-black dark:bg-white' : 'invisible'}`} />
         </div>
     )
 }
@@ -264,7 +264,7 @@ export default function BaseLandingPage() {
             ></div>
             {/* <img src={CoverPhoto} alt="CoverPhoto" style={{height: '10vh'}} /> */}
             <div className='flex h-3/5 flex-col  gap-y-5 px-2'>
-                <div className='pt-10'>
+                <div className='pt-10 dark:text-white'>
                     <h1 className='text-xl font-bold'>{profileName}</h1>
                     <h1 className='text-base text-slate-500'>{profileHandle}</h1>
                     <h1 className='text-base'>{profileDescription}</h1>
@@ -273,7 +273,8 @@ export default function BaseLandingPage() {
                         <h1 className='text-base text-slate-500'>Toronto, CA</h1>
                     </div>
                     <h1 className='text-base text-slate-500'>
-                        <span className='font-bold text-black'>500</span> Trying to recruit
+                        <span className='font-bold text-black dark:text-white'>500</span> Trying to
+                        recruit
                     </h1>
                 </div>
                 <div>
