@@ -230,6 +230,10 @@ const postTypeToTabNameMap: Record<PostType, TabLabel> = {
     project: 'Projects',
 }
 
+export type BaseLandingPageProps = {
+    darkmodeButton?: JSX.Element
+}
+
 export default function BaseLandingPage() {
     const [currentTab, setCurrentTab] = useState<TabLabel>('All')
     const [posts, setPosts] = useState<Array<PostData>>(postsData)
