@@ -231,10 +231,12 @@ const postTypeToTabNameMap: Record<PostType, TabLabel> = {
 }
 
 export type BaseLandingPageProps = {
-    darkmodeButton?: JSX.Element
+    DarkmodeButton?: JSX.Element
 }
 
-export default function BaseLandingPage() {
+export default function BaseLandingPage(props: BaseLandingPageProps) {
+    const { DarkmodeButton } = props
+
     const [currentTab, setCurrentTab] = useState<TabLabel>('All')
     const [posts, setPosts] = useState<Array<PostData>>(postsData)
 
@@ -257,6 +259,9 @@ export default function BaseLandingPage() {
         <div className='relative'>
             <div className='absolute' style={{ top: '15vh', left: '8px' }}>
                 <ProfileIcon large={true} />
+            </div>
+            <div className='absolute' style={{ top: '21vh', right: '20px' }}>
+                {DarkmodeButton}
             </div>
             <div
                 style={{
