@@ -1,34 +1,7 @@
 import { useState } from 'react'
 import BaseLandingPage from './pages/BaseLandingPage/BaseLandingPage'
+import { DarkModeButton } from './components/DarkModeButton'
 
-type DarkModeButtonProps = {
-    handleToggleDarkMode: () => void
-}
-
-export function DarkModeButton(props: DarkModeButtonProps) {
-    const { handleToggleDarkMode } = props
-
-    return (
-        <>
-            {/* <button onClick={handleToggleDarkMode}>Toggle darkmode</button> */}
-            <input type='checkbox' id='darkmode-toggle' />
-            <label
-                htmlFor='darkmode-toggle'
-                style={{
-                    width: '100px',
-                    height: '50px',
-                    position: 'relative',
-                    display: 'block',
-                    background: '#ebebeb',
-                    borderRadius: '200px',
-                    boxShadow:
-                        'inset 0px 5px 15px rgba(0,0,0,0.4), inset 0px -5px 15px rgba(255,255,255,0.4)',
-                    cursor: 'pointer',
-                }}
-            />
-        </>
-    )
-}
 export default function App() {
     const [darkMode, setDarkMode] = useState(true)
 
@@ -36,7 +9,9 @@ export default function App() {
         setDarkMode(!darkMode)
     }
 
-    const darkModeButton = <DarkModeButton handleToggleDarkMode={toggleDarkMode} />
+    const darkModeButton = (
+        <DarkModeButton handleToggleDarkMode={toggleDarkMode} isDarkMode={darkMode} />
+    )
 
     return (
         <div className={darkMode ? 'dark' : ''}>

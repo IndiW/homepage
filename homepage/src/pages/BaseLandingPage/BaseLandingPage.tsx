@@ -260,7 +260,7 @@ export default function BaseLandingPage(props: BaseLandingPageProps) {
             <div className='absolute' style={{ top: '15vh', left: '8px' }}>
                 <ProfileIcon large={true} />
             </div>
-            <div className='absolute' style={{ top: '21vh', right: '20px' }}>
+            <div className='absolute' style={{ top: '19vh', right: '20px' }}>
                 {DarkmodeButton}
             </div>
             <div
