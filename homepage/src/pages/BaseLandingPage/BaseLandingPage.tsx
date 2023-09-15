@@ -1,146 +1,9 @@
 import { useState } from 'react'
-import { HeartIcon, LocationIcon } from '../../components/Icons'
-
-type ProfileIconProps = {
-    large?: boolean
-}
-export function ProfileIcon(props: ProfileIconProps) {
-    const { large } = props
-    return (
-        <div
-            style={{
-                height: large ? 80 : 50,
-                width: large ? 80 : 50,
-                backgroundColor: '#bbb',
-                borderRadius: '50%',
-                display: 'inline-block',
-                backgroundImage: "url('vibe.gif')",
-                backgroundSize: 'contain',
-                borderColor: 'white',
-                borderWidth: '2px',
-            }}
-        >
-            {' '}
-        </div>
-    )
-}
-
-type IconButtonProps = {
-    updateValue: (newValue: number) => void
-    value: number
-}
-export function IconButton(props: IconButtonProps) {
-    const { value, updateValue } = props
-    const [hover, setHover] = useState(false)
-    const [clicked, setClicked] = useState(false)
-
-    const handleClick = () => {
-        if (!clicked) {
-            updateValue(value + 1)
-        } else {
-            updateValue(value - 1)
-        }
-        setClicked(!clicked)
-    }
-
-    return (
-        <button
-            className={hover || clicked ? 'text-rose-700' : 'text-slate-500'}
-            onMouseEnter={(e) => {
-                setHover(true)
-            }}
-            onMouseLeave={(e) => {
-                setHover(false)
-            }}
-            onClick={handleClick}
-        >
-            <div className='flex flex-row items-center gap-2'>
-                <div
-                    className={`flex h-5 w-5 content-center items-center justify-center rounded-full ${
-                        hover ? ' bg-rose-700 bg-opacity-20' : ''
-                    }
-                    `}
-                >
-                    <HeartIcon
-                        w={'15px'}
-                        h={'15px'}
-                        color={hover || clicked ? '#be123c' : '#64748b'}
-                        fill={clicked ? '#be123c' : 'none'}
-                    />
-                </div>
-
-                <p className='text-sm'>{value}</p>
-            </div>
-        </button>
-    )
-}
-
-type PostMetadata = {
-    likes: number
-    shares: number
-}
-type PostProps = {
-    date: string
-    content: string | JSX.Element
-    profileName: string
-    profileHandle: string
-    metadata: PostMetadata
-}
-export function Post(props: PostProps) {
-    const { date, content, profileName, profileHandle, metadata } = props
-    const [likes, updateLikes] = useState(metadata.likes)
-    const handleUpdateLike = (newValue: number) => {
-        updateLikes(newValue)
-    }
-
-    const postContent = typeof content === 'string' ? <p>{content}</p> : content
-
-    return (
-        <div className='flex dark:text-white'>
-            <div className='h-14 w-14 flex-none'>
-                <ProfileIcon />
-            </div>
-            <div className='flex-initial'>
-                <div className='flex flex-col gap-y-0.5'>
-                    <span className='flex flex-row items-center'>
-                        <h1 className='pr-2 font-bold'>{profileName.split(' ')[0]}</h1>
-                        <h2 className='text-sm text-slate-500'>
-                            {profileHandle} · {date}
-                        </h2>
-                    </span>
-                    {postContent}
-                    <IconButton value={likes} updateValue={handleUpdateLike} />
-                </div>
-            </div>
-        </div>
-    )
-}
-
-type TabButtonProps = {
-    label: string
-    isActive: boolean
-    handleClick: () => void
-}
-export function TabButton(props: TabButtonProps) {
-    const { label, isActive, handleClick } = props
-
-    return (
-        <div>
-            <button
-                onClick={handleClick}
-                className={`px-2 py-1 hover:bg-slate-100 ${
-                    isActive ? 'text-black dark:text-white' : 'text-slate-500'
-                }`}
-            >
-                {label}
-            </button>
-            <hr className={`${isActive ? 'h-1 bg-black dark:bg-white' : 'invisible'}`} />
-        </div>
-    )
-}
-
-const tabLabels = ['All', 'Projects', 'Posts'] as const
-type TabLabel = (typeof tabLabels)[number]
+import { LocationIcon } from '../../components/Icons'
+import { IconButton } from '../../components/IconButton'
+import { ProfileIcon } from '../../components/ProfileIcon'
+import { Post, CssPost, PostMetadata } from '../../components/Post'
+import { TabButton, TabLabel, tabLabels } from '../../components/TabButton'
 
 type PostType = 'project' | 'text'
 type PostData = {
@@ -148,51 +11,6 @@ type PostData = {
     date: string
     metadata: PostMetadata
     content: string | JSX.Element
-}
-
-export function CssPost() {
-    return (
-        <div
-            style={{
-                position: 'relative',
-                overflow: 'hidden',
-                backfaceVisibility: 'hidden',
-            }}
-        >
-            <h1>I CAN ADD CSS</h1>
-            <div
-                className='shader__layer specular'
-                style={{
-                    background: 'black',
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundSize: '100%',
-                    backgroundAttachment: 'fixed',
-                    backgroundImage:
-                        'linear-gradient(180deg, black 20%, #3c5e6d 35%, #f4310e, #f58308 80%, black)',
-                    mixBlendMode: 'color-dodge',
-                }}
-            >
-                <div
-                    className='shader__layer mask'
-                    style={{
-                        mixBlendMode: 'multiply',
-                        background: 'black',
-                        position: 'absolute',
-                        left: 0,
-                        top: 0,
-                        width: '100%',
-                        height: '100%',
-                        backgroundSize: '100%',
-                        backgroundImage: "url('coverphoto.jpg')",
-                    }}
-                ></div>
-            </div>
-        </div>
-    )
 }
 
 const postsData: Array<PostData> = [
@@ -271,7 +89,6 @@ export default function BaseLandingPage(props: BaseLandingPageProps) {
                     backgroundSize: 'cover',
                 }}
             ></div>
-            {/* <img src={CoverPhoto} alt="CoverPhoto" style={{height: '10vh'}} /> */}
             <div className='flex h-3/5 flex-col  gap-y-5 px-2'>
                 <div className='pt-10 dark:text-white'>
                     <h1 className='text-xl font-bold'>{profileName}</h1>
