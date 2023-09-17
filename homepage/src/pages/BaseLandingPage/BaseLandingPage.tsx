@@ -2,16 +2,9 @@ import { useState } from 'react'
 import { LocationIcon } from '../../components/Icons'
 import { IconButton } from '../../components/IconButton'
 import { ProfileIcon } from '../../components/ProfileIcon'
-import { Post, CssPost, PostMetadata } from '../../components/Post'
+import { Post, CssPost } from '../../components/Post'
 import { TabButton, TabLabel, tabLabels } from '../../components/TabButton'
-
-type PostType = 'project' | 'text'
-type PostData = {
-    type: PostType
-    date: string
-    metadata: PostMetadata
-    content: string | JSX.Element
-}
+import { PostType, PostData } from '../../client'
 
 const postsData: Array<PostData> = [
     {

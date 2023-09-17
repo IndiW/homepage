@@ -1,7 +1,7 @@
 import { ProfileIcon } from '../../components/ProfileIcon'
 import { useState } from 'react'
 import { IconButton } from '../IconButton'
-import { PostMetadata } from './types'
+import { PostMetadata } from '../../client'
 
 type PostProps = {
     date: string
