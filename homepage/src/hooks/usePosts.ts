@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react'
 import { PostData } from '../client'
 import { CssPost } from '../components/Post'
+import { PushableButtonPost } from '../components/Post/PushableButtonPost'
 
 const postsData: Array<PostData> = [
+    {
+        type: 'project',
+        date: 'Sept 20, 2023',
+        metadata: {
+            likes: 897,
+            shares: 22,
+        },
+        content: PushableButtonPost(),
+    },
     {
         type: 'project',
         date: 'Sept 5, 2023',

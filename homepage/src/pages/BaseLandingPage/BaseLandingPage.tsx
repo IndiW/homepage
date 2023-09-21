@@ -37,7 +37,7 @@ export default function BaseLandingPage(props: BaseLandingPageProps) {
     const profileName = 'Indika Wijesundera'
     const profileHandle = '@SoftwareEngineer'
     const profileDescription =
-        'Full stack developer with experience in typescript, python, react and aws'
+        'Trying to make cool things that people enjoy using. Currently using Typescript, Python, React and AWS.'
 
     return (
         <div className='relative'>
