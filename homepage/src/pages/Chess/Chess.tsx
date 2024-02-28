@@ -353,6 +353,19 @@ export function Chess() {
                 setSelectedTile({ x: null, y: null })
                 setSelectedPiece(chessboard[col][row])
             }
+            if (
+                selectedPiece !== null &&
+                selectedTile.x !== null &&
+                selectedTile.y !== null &&
+                chessboard[col][row] !== null &&
+                selectedPiece.color !== chessboard[col][row]?.color
+            ) {
+                const newBoard = [...chessboard]
+                newBoard[col][row] = selectedPiece
+                newBoard[col][row]?.setPosition([row, col])
+                newBoard[selectedTile.y][selectedTile.x] = null
+                setChessboard(newBoard)
+            }
             if (selectedPiece !== null) {
                 setSelectedTile({ x: null, y: null })
                 setSelectedPiece(null)
