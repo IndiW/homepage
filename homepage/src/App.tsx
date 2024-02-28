@@ -15,7 +15,7 @@ export default function App() {
 
     return (
         <div className={darkMode ? 'dark' : ''}>
-            <div className='flex h-screen w-full justify-center dark:bg-slate-800'>
+            <div className='flex w-full justify-center dark:bg-slate-800'>
                 <div className={'w-full md:w-1/2 md:border md:border-y-0 md:border-slate-500'}>
                     <BaseLandingPage DarkmodeButton={darkModeButton} />
                 </div>
