@@ -1,36 +1,21 @@
 import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
 
-const TILE_SIZE = 50
+const TILE_SIZE = 80
 const ROWS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-
-const useMousePosition = () => {
-    const [mousePosition, setMousePosition] = React.useState<{
-        x: number | null
-        y: number | null
-    }>({ x: null, y: null })
-    React.useEffect(() => {
-        const updateMousePosition = (ev: MouseEvent) => {
-            setMousePosition({ x: ev.clientX, y: ev.clientY })
-        }
-        window.addEventListener('mousedown', updateMousePosition)
-        return () => {
-            window.removeEventListener('mousedown', updateMousePosition)
-        }
-    }, [])
-    return mousePosition
-}
 
 function Board({
     pieces,
     selectedTile,
     onTileClick,
     onPieceClick,
+    moves,
 }: {
     pieces: Array<Piece>
     selectedTile: { x: number | null; y: number | null }
     onTileClick: (x: number | null, y: number | null) => () => void
     onPieceClick: (x: number | null, y: number | null) => () => void
+    moves?: Array<[number, number]>
 }) {
     const isSelected = (x: number, y: number) => {
         return (
@@ -39,6 +24,12 @@ function Board({
             selectedTile.x === x &&
             selectedTile.y === y
         )
+    }
+
+    console.log(moves)
+
+    const isMove = (x: number, y: number) => {
+        return moves?.some(([moveX, moveY]) => moveX === x && moveY === y)
     }
     const boardDivs = () => {
         const board: Array<JSX.Element> = []
@@ -50,17 +41,31 @@ function Board({
                     ? 'bg-green-800'
                     : 'bg-amber-100'
                 const tile = (
-                    <div
-                        id={`${ROWS[i]}${j}`}
-                        className={`absolute h-4 w-4 ${tileColor}`}
-                        style={{
-                            top: i * TILE_SIZE,
-                            left: j * TILE_SIZE,
-                            width: TILE_SIZE,
-                            height: TILE_SIZE,
-                        }}
-                        onClick={onTileClick(j, i)}
-                    />
+                    <>
+                        <div
+                            id={`${ROWS[i]}${j}`}
+                            className={`absolute h-4 w-4 ${tileColor}`}
+                            style={{
+                                top: i * TILE_SIZE,
+                                left: j * TILE_SIZE,
+                                width: TILE_SIZE,
+                                height: TILE_SIZE,
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                            onClick={onTileClick(j, i)}
+                        >
+                            <div
+                                className={`${isMove(j, i) ? '' : 'invisible'} bg-green-600`}
+                                style={{
+                                    borderRadius: '50%',
+                                    height: '20%',
+                                    width: '20%',
+                                }}
+                            />
+                        </div>
+                    </>
                 )
                 board.push(tile)
             }
@@ -75,11 +80,7 @@ function Board({
                 key={piece.id}
                 src={piece.src}
                 alt={piece.id}
-                className={`absolute ${
-                    isSelected(piece.position[0], piece.position[1])
-                        ? 'border-4 border-yellow-500'
-                        : ''
-                }`}
+                className={`absolute ${isSelected(piece.position[0], piece.position[1]) ? '' : ''}`}
                 style={{
                     top: piece.position[1] * TILE_SIZE,
                     left: piece.position[0] * TILE_SIZE,
@@ -94,10 +95,10 @@ function Board({
     })
 
     return (
-        <div className='h-32 w-32'>
+        <>
             {boardDivs()}
             {piecesDivs}
-        </div>
+        </>
     )
 }
 
@@ -112,6 +113,7 @@ interface Piece {
     src: string
 
     setPosition(position: [number, number]): void
+    availableMoves(): Array<[number, number]>
 }
 
 class Pawn implements Piece {
@@ -134,17 +136,19 @@ class Pawn implements Piece {
     setPosition(position: [number, number]) {
         this.position = position
     }
-    move() {
-        if (
-            (this.color == 'w' && this.position[0] == 7) ||
-            (this.color == 'b' && this.position[0] == 0)
-        ) {
+    availableMoves(): Array<[number, number]> {
+        if (this.color == 'w' && this.position[1] == 6) {
             return [
-                [this.position[0] + 1, this.position[1]],
-                [this.position[0] + 2, this.position[1]],
+                [this.position[0], this.position[1] - 1],
+                [this.position[0], this.position[1] - 2],
+            ]
+        } else if (this.color == 'b' && this.position[1] == 1) {
+            return [
+                [this.position[0], this.position[1] + 1],
+                [this.position[0], this.position[1] + 2],
             ]
         } else {
-            return [[this.position[0] + 1, this.position[1]]]
+            return [[this.position[0], this.position[1] - 1]]
         }
     }
 }
@@ -168,6 +172,28 @@ class Rook implements Piece {
     setPosition(position: [number, number]) {
         this.position = position
     }
+
+    availableMoves(): Array<[number, number]> {
+        const moves: Array<[number, number]> = []
+
+        // Horizontal moves
+        for (let i = this.position[0] + 1; i <= 7; i++) {
+            moves.push([i, this.position[1]])
+        }
+        for (let i = this.position[0] - 1; i >= 0; i--) {
+            moves.push([i, this.position[1]])
+        }
+
+        // Vertical moves
+        for (let i = this.position[1] + 1; i <= 7; i++) {
+            moves.push([this.position[0], i])
+        }
+        for (let i = this.position[1] - 1; i >= 0; i--) {
+            moves.push([this.position[0], i])
+        }
+
+        return moves
+    }
 }
 
 class Knight implements Piece {
@@ -189,6 +215,22 @@ class Knight implements Piece {
 
     setPosition(position: [number, number]) {
         this.position = position
+    }
+
+    availableMoves(): Array<[number, number]> {
+        const moves: Array<[number, number]> = []
+
+        // Knight moves
+        moves.push([this.position[0] + 2, this.position[1] + 1])
+        moves.push([this.position[0] + 2, this.position[1] - 1])
+        moves.push([this.position[0] - 2, this.position[1] + 1])
+        moves.push([this.position[0] - 2, this.position[1] - 1])
+        moves.push([this.position[0] + 1, this.position[1] + 2])
+        moves.push([this.position[0] + 1, this.position[1] - 2])
+        moves.push([this.position[0] - 1, this.position[1] + 2])
+        moves.push([this.position[0] - 1, this.position[1] - 2])
+
+        return moves
     }
 }
 
@@ -212,6 +254,20 @@ class Bishop implements Piece {
     setPosition(position: [number, number]) {
         this.position = position
     }
+
+    availableMoves(): Array<[number, number]> {
+        const moves: Array<[number, number]> = []
+
+        // Bishop moves
+        for (let i = 1; i <= 7; i++) {
+            moves.push([this.position[0] + i, this.position[1] + i])
+            moves.push([this.position[0] + i, this.position[1] - i])
+            moves.push([this.position[0] - i, this.position[1] + i])
+            moves.push([this.position[0] - i, this.position[1] - i])
+        }
+
+        return moves
+    }
 }
 
 class Queen implements Piece {
@@ -234,6 +290,28 @@ class Queen implements Piece {
     setPosition(position: [number, number]) {
         this.position = position
     }
+
+    availableMoves(): Array<[number, number]> {
+        const moves: Array<[number, number]> = []
+
+        // Horizontal and vertical moves
+        for (let i = 1; i <= 7; i++) {
+            moves.push([this.position[0] + i, this.position[1]])
+            moves.push([this.position[0] - i, this.position[1]])
+            moves.push([this.position[0], this.position[1] + i])
+            moves.push([this.position[0], this.position[1] - i])
+        }
+
+        // Diagonal moves
+        for (let i = 1; i <= 7; i++) {
+            moves.push([this.position[0] + i, this.position[1] + i])
+            moves.push([this.position[0] + i, this.position[1] - i])
+            moves.push([this.position[0] - i, this.position[1] + i])
+            moves.push([this.position[0] - i, this.position[1] - i])
+        }
+
+        return moves
+    }
 }
 
 class King implements Piece {
@@ -255,6 +333,22 @@ class King implements Piece {
 
     setPosition(position: [number, number]) {
         this.position = position
+    }
+
+    availableMoves(): Array<[number, number]> {
+        const moves: Array<[number, number]> = []
+
+        // Horizontal and vertical moves
+        moves.push([this.position[0] + 1, this.position[1]])
+        moves.push([this.position[0] - 1, this.position[1]])
+        moves.push([this.position[0], this.position[1] + 1])
+        moves.push([this.position[0], this.position[1] - 1])
+        moves.push([this.position[0] + 1, this.position[1] + 1])
+        moves.push([this.position[0] + 1, this.position[1] - 1])
+        moves.push([this.position[0] - 1, this.position[1] + 1])
+        moves.push([this.position[0] - 1, this.position[1] - 1])
+
+        return moves
     }
 }
 
@@ -387,13 +481,16 @@ export function Chess() {
     }
 
     return (
-        <div className='flex items-center justify-center'>
-            <Board
-                pieces={pieces}
-                selectedTile={selectedTile}
-                onTileClick={handleTileClick}
-                onPieceClick={handlePieceClick}
-            />
+        <div className='flex items-center justify-center' style={{ height: '100vh' }}>
+            <div className='flex items-center justify-center'>
+                <Board
+                    pieces={pieces}
+                    selectedTile={selectedTile}
+                    onTileClick={handleTileClick}
+                    onPieceClick={handlePieceClick}
+                    moves={selectedPiece !== null ? selectedPiece?.availableMoves() : []}
+                />
+            </div>
         </div>
     )
 }
