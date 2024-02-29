@@ -15,7 +15,7 @@ function Board({
     selectedTile: { x: number | null; y: number | null }
     onTileClick: (x: number | null, y: number | null) => () => void
     onPieceClick: (x: number | null, y: number | null) => () => void
-    moves?: Array<[number, number]>
+    moves: Array<[number, number]>
 }) {
     const isSelected = (x: number, y: number) => {
         return (
@@ -137,18 +137,24 @@ class Pawn implements Piece {
         this.position = position
     }
     availableMoves(): Array<[number, number]> {
-        if (this.color == 'w' && this.position[1] == 6) {
-            return [
-                [this.position[0], this.position[1] - 1],
-                [this.position[0], this.position[1] - 2],
-            ]
-        } else if (this.color == 'b' && this.position[1] == 1) {
-            return [
-                [this.position[0], this.position[1] + 1],
-                [this.position[0], this.position[1] + 2],
-            ]
+        if (this.color == 'w') {
+            if (this.position[1] == 6) {
+                return [
+                    [this.position[0], this.position[1] - 1],
+                    [this.position[0], this.position[1] - 2],
+                ]
+            } else {
+                return [[this.position[0], this.position[1] - 1]]
+            }
         } else {
-            return [[this.position[0], this.position[1] - 1]]
+            if (this.position[1] == 1) {
+                return [
+                    [this.position[0], this.position[1] + 1],
+                    [this.position[0], this.position[1] + 2],
+                ]
+            } else {
+                return [[this.position[0], this.position[1] + 1]]
+            }
         }
     }
 }
@@ -400,6 +406,7 @@ const INITIAL_CHESS_BOARD = [
 ]
 
 export function Chess() {
+    const [turn, setTurn] = useState<PieceColor>(PieceColor.WHITE)
     const [selectedTile, setSelectedTile] = useState<{ x: number | null; y: number | null }>({
         x: null,
         y: null,
@@ -413,22 +420,26 @@ export function Chess() {
             const row = Math.floor(x)
             const col = Math.floor(y)
             if (row < 0 || row > 7 || col < 0 || col > 7) return null
-            if (
-                (selectedTile.x === row && selectedTile.y === col) ||
-                chessboard[col][row] !== null
-            ) {
-                setSelectedTile({ x: null, y: null })
-            } else if (
+
+            const canMovePieceToEmptyTile =
                 selectedPiece !== null &&
-                selectedTile.x !== null &&
-                selectedTile.y !== null
-            ) {
+                selectedPiece.color === turn &&
+                isValidMove(row, col) &&
+                chessboard[col][row] == null
+
+            if (selectedTile.x === row && selectedTile.y === col) {
+                setSelectedTile({ x: null, y: null })
+            } else if (canMovePieceToEmptyTile) {
+                if (selectedTile.x == null || selectedTile.y == null) return
                 const newBoard = [...chessboard]
-                const piece = selectedPiece
-                piece.setPosition([row, col])
-                newBoard[col][row] = piece
+                newBoard[col][row] = selectedPiece
+                newBoard[col][row]?.setPosition([row, col])
                 newBoard[selectedTile.y][selectedTile.x] = null
                 setChessboard(newBoard)
+                setTurn(turn === PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE)
+                setSelectedTile({ x: null, y: null })
+                setSelectedPiece(null)
+            } else if (selectedPiece !== null) {
                 setSelectedTile({ x: null, y: null })
                 setSelectedPiece(null)
             } else {
@@ -437,33 +448,46 @@ export function Chess() {
         }
     }
 
+    const isValidMove = (x: number, y: number): boolean => {
+        if (selectedPiece === null) return false
+        return selectedPiece?.availableMoves().some(([moveX, moveY]) => moveX === x && moveY === y)
+    }
+
     const handlePieceClick = (x: number | null, y: number | null) => {
         return () => {
-            if (x === null || y === null) return null
+            if (x === null || y === null) return
             const row = Math.floor(x)
             const col = Math.floor(y)
-            if (row < 0 || row > 7 || col < 0 || col > 7) return null
-            if (selectedTile.x === row && selectedTile.y === col) {
-                setSelectedTile({ x: null, y: null })
-                setSelectedPiece(chessboard[col][row])
-            }
-            if (
+            if (row < 0 || row > 7 || col < 0 || col > 7) return
+
+            if (chessboard[col][row]?.color !== turn) return
+
+            const canMovePieceToOccupiedTile =
                 selectedPiece !== null &&
-                selectedTile.x !== null &&
-                selectedTile.y !== null &&
+                selectedPiece.color === turn &&
                 chessboard[col][row] !== null &&
-                selectedPiece.color !== chessboard[col][row]?.color
-            ) {
+                selectedPiece.color !== chessboard[col][row]?.color &&
+                isValidMove(row, col)
+
+            if (canMovePieceToOccupiedTile) {
+                if (selectedTile.x == null || selectedTile.y == null) return
                 const newBoard = [...chessboard]
                 newBoard[col][row] = selectedPiece
                 newBoard[col][row]?.setPosition([row, col])
                 newBoard[selectedTile.y][selectedTile.x] = null
                 setChessboard(newBoard)
+                setTurn(turn === PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE)
             }
-            if (selectedPiece !== null) {
+            // Click same piece twice
+            else if (
+                selectedPiece !== null &&
+                selectedPiece.position[0] === row &&
+                selectedPiece.position[1] === col
+            ) {
                 setSelectedTile({ x: null, y: null })
                 setSelectedPiece(null)
             } else {
+                // Select the piece
                 setSelectedTile({ x: row, y: col })
                 setSelectedPiece(chessboard[col][row])
             }
