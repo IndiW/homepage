@@ -460,7 +460,7 @@ export function Chess() {
             const col = Math.floor(y)
             if (row < 0 || row > 7 || col < 0 || col > 7) return
 
-            if (chessboard[col][row]?.color !== turn) return
+            if (selectedPiece == null && chessboard[col][row]?.color !== turn) return
 
             const canMovePieceToOccupiedTile =
                 selectedPiece !== null &&
@@ -477,6 +477,8 @@ export function Chess() {
                 newBoard[selectedTile.y][selectedTile.x] = null
                 setChessboard(newBoard)
                 setTurn(turn === PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE)
+                setSelectedTile({ x: null, y: null })
+                setSelectedPiece(null)
             }
             // Click same piece twice
             else if (
@@ -504,8 +506,15 @@ export function Chess() {
         }
     }
 
+    const handleReset = () => {
+        setChessboard(INITIAL_CHESS_BOARD)
+        setTurn(PieceColor.WHITE)
+        setSelectedTile({ x: null, y: null })
+        setSelectedPiece(null)
+    }
+
     return (
-        <div className='flex items-center justify-center' style={{ height: '100vh' }}>
+        <div className='flex flex-col items-center justify-center' style={{ height: '100vh' }}>
             <div className='flex items-center justify-center'>
                 <Board
                     pieces={pieces}
@@ -515,6 +524,12 @@ export function Chess() {
                     moves={selectedPiece !== null ? selectedPiece?.availableMoves() : []}
                 />
             </div>
+            <button
+                className='fixed bottom-0 rounded bg-green-800 py-2 px-4 font-bold text-white hover:bg-green-900'
+                onClick={handleReset}
+            >
+                New Game
+            </button>
         </div>
     )
 }
