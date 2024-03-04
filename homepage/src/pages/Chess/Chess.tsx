@@ -1,10 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
 import { ChessBoard, Piece, PieceColor } from './types'
-import { INITIAL_CHESS_BOARD } from './constants'
-
-const TILE_SIZE = 80
-const ROWS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+import { INITIAL_CHESS_BOARD, TILE_SIZE, ROWS } from './constants'
 
 function Board({
     pieces,

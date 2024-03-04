@@ -1,6 +1,8 @@
-import { Bishop, King, Knight, Pawn, Queen, Rook } from './Pieces'
+import { Bishop, King, Knight, Pawn, Queen, Rook } from './pieces'
 import { ChessBoard, PieceColor } from './types'
 
+export const TILE_SIZE = 80
+export const ROWS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 export const INITIAL_CHESS_BOARD: ChessBoard = [
     [
         new Rook('bRa', PieceColor.BLACK, [0, 0], 'pieces/bR.svg'),
