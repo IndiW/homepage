@@ -96,27 +96,63 @@ export class Rook implements Piece {
         const moves: Array<[number, number]> = []
 
         // Horizontal and vertical moves
+        // Move forward
         for (let i = 1; i <= 7; i++) {
-            const x1 = this.position[0] + i
-            const y1 = this.position[1]
-            const x2 = this.position[0] - i
-            const y2 = this.position[1]
-            const x3 = this.position[0]
-            const y3 = this.position[1] + i
-            const x4 = this.position[0]
-            const y4 = this.position[1] - i
+            const x = this.position[0] + i
+            const y = this.position[1]
+            if (x >= 0 && x <= 7) {
+            if (chessboard[y][x] === null) {
+                moves.push([x, y])
+            } else {
+                break
+            }
+            } else {
+            break
+            }
+        }
 
-            if (x1 >= 0 && x1 <= 7) {
-                moves.push([x1, y1])
+        // Move left
+        for (let i = 1; i <= 7; i++) {
+            const x = this.position[0] - i
+            const y = this.position[1]
+            if (x >= 0 && x <= 7) {
+            if (chessboard[y][x] === null) {
+                moves.push([x, y])
+            } else {
+                break
             }
-            if (x2 >= 0 && x2 <= 7) {
-                moves.push([x2, y2])
+            } else {
+            break
             }
-            if (y3 >= 0 && y3 <= 7) {
-                moves.push([x3, y3])
+        }
+
+        // Move right
+        for (let i = 1; i <= 7; i++) {
+            const x = this.position[0] + i
+            const y = this.position[1]
+            if (x >= 0 && x <= 7) {
+            if (chessboard[y][x] === null) {
+                moves.push([x, y])
+            } else {
+                break
             }
-            if (y4 >= 0 && y4 <= 7) {
-                moves.push([x4, y4])
+            } else {
+            break
+            }
+        }
+
+        // Move down
+        for (let i = 1; i <= 7; i++) {
+            const x = this.position[0]
+            const y = this.position[1] + i
+            if (y >= 0 && y <= 7) {
+            if (chessboard[y][x] === null) {
+                moves.push([x, y])
+            } else {
+                break
+            }
+            } else {
+            break
             }
         }
 
